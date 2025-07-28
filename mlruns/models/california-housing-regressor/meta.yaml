@@ -1,7 +1,7 @@
 aliases: {}
-creation_timestamp: 1753703599331
+creation_timestamp: 1753707127635
 deployment_job_id: null
 deployment_job_state: null
 description: null
-last_updated_timestamp: 1753703602864
+last_updated_timestamp: 1753707127654
 name: california-housing-regressor

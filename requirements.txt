@@ -101,6 +101,8 @@ pandas==2.3.1
 pathspec==0.12.1
 pillow==11.3.0
 platformdirs==4.3.8
+prometheus-fastapi-instrumentator==7.1.0
+prometheus_client==0.22.1
 prompt_toolkit==3.0.51
 propcache==0.3.2
 protobuf==6.31.1
@@ -120,6 +122,7 @@ pygtrie==2.5.0
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1
+python-json-logger==3.3.0
 python-multipart==0.0.20
 pytz==2025.2
 PyYAML==6.0.2

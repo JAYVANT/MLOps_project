@@ -22,6 +22,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # We need 'mlruns' so the API can load the model from it.
 COPY src/ ./src/
 COPY mlruns/ ./mlruns/
+# Create and set permissions for the log file
+RUN touch /app/api_log.log && chmod 666 /app/api_log.log
 
 # Expose port 8000 to the outside world. This is the port our app will run on.
 EXPOSE 8000

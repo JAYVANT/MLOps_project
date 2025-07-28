@@ -1,45 +1,37 @@
+# src/api.py
 import os
 import pandas as pd
 import mlflow
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import logging
+from pythonjsonlogger import jsonlogger
+from prometheus_fastapi_instrumentator import Instrumentator
 
-# Define the path to the MLflow tracking server.
-# Since we are running locally, it's the 'mlruns' directory.
-# In a production setup, this would be a remote URI (e.g., http://, postgresql://).
-MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "file:./mlruns")
-mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+# --- 1. Setup Logging & Monitoring ---
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+logHandler = logging.FileHandler("api_log.log")
+formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(message)s')
+logHandler.setFormatter(formatter)
+log.addHandler(logHandler)
 
-# Define the model name and stage we want to load
-MODEL_NAME =  "california-housing-regressor"  # This should match the name used in MLflow
-MODEL_VERSION = "1" # This is the version of the model we want to load
-MODEL_STAGE = "None" # We didn't assign a stage, so we use 'None'
+# --- 2. Create FastAPI App and Instrument for Prometheus ---
+app = FastAPI(title="MLOps Prediction API")
+Instrumentator().instrument(app).expose(app)
 
-# Create the FastAPI app object
-app = FastAPI(
-    title="California Housing Price Prediction API",
-    description="An API to predict housing prices in California.",
-    version="0.1.0"
-)
-
-# Load the model from the MLflow Model Registry
+# --- 3. Load Registered Model from MLflow ---
+MODEL_NAME = "california-housing-regressor"
+MODEL_VERSION = 1 # We use the version we just registered
+model = None
 try:
-    print(f"Loading model '{MODEL_NAME}' version {MODEL_VERSION} from stage '{MODEL_STAGE}'...")
-    # The model URI format is "models:/<model_name>/<stage_or_version>"
-    # model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
-    model_uri = "mlruns/<895107721900356651>/<2c894360b0f14aadb767146c9cdb4236>/artifacts/model"
+    model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
     model = mlflow.pyfunc.load_model(model_uri)
-    print("Model loaded successfully.")
+    log.info(f"Successfully loaded model '{MODEL_NAME}' version {MODEL_VERSION}")
 except Exception as e:
-    # If the model fails to load, we raise an error to prevent the app from starting.
-    # This is a critical failure.
-    print(f"Error loading model: {e}")
-    model = None # Set model to None to indicate failure
-    # In a real app, you might want to exit or have more robust error handling.
+    log.error(f"Error loading model: {e}", exc_info=True)
 
-
-# Define the input data schema using Pydantic
-# These are the features our model expects.
+# --- 4. Define API Input Schema ---
 class HouseFeatures(BaseModel):
     MedInc: float
     HouseAge: float
@@ -50,49 +42,18 @@ class HouseFeatures(BaseModel):
     Latitude: float
     Longitude: float
 
-    class Config:
-        # Provides an example for the auto-generated documentation
-        schema_extra = {
-            "example": {
-                "MedInc": 8.3252,
-                "HouseAge": 41.0,
-                "AveRooms": 6.98412698,
-                "AveBedrms": 1.02380952,
-                "Population": 322.0,
-                "AveOccup": 2.55555556,
-                "Latitude": 37.88,
-                "Longitude": -122.23
-            }
-        }
-
-
-@app.get("/")
-def read_root():
-    """A simple endpoint to check if the API is running."""
-    return {"status": "ok", "message": "Welcome to the ML Model Prediction API!"}
-
-
+# --- 5. Define Prediction Endpoint ---
 @app.post("/predict/")
 def predict_price(features: HouseFeatures):
-    """
-    Accepts housing features in a POST request and returns the predicted price.
-    """
     if model is None:
-        raise HTTPException(status_code=503, detail="Model is not available. Please check server logs.")
+        raise HTTPException(status_code=503, detail="Model not available")
 
     try:
-        # Convert the input data to a pandas DataFrame
-        # The model expects a DataFrame with specific column names.
+        log.info("Received prediction request", extra={'input': features.dict()})
         input_df = pd.DataFrame([features.dict()])
-
-        # Make a prediction
-        prediction = model.predict(input_df)
-
-        # The prediction is usually a numpy array, so we extract the first element.
-        predicted_price = prediction[0]
-
-        return {"predicted_median_house_value": predicted_price}
-
+        prediction = model.predict(input_df)[0]
+        log.info("Prediction successful", extra={'prediction': prediction})
+        return {"predicted_median_house_value": prediction}
     except Exception as e:
-        # Handle any errors during prediction
-        raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+        log.error(f"Prediction error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Prediction failed")
