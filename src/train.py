@@ -46,10 +46,14 @@ def train_model(model_name, model, X_train, y_train, X_test, y_test):
 
         # Log the trained model as an artifact
         mlflow.sklearn.log_model(model, "model")
+        # Register the model in the Model Registry
+        model_uri = mlflow.get_artifact_uri("model")
+        mlflow.register_model(model_uri, "california-housing-regressor")
         print(f"--- {model_name} Run Finished ---")
 
 
 if __name__ == "__main__":
+    mlflow.set_tracking_uri("file:./mlruns")   # Set the MLflow tracking URI") 
     # Load the dataset
     try:
         df = pd.read_csv("data/raw/housing.csv")
