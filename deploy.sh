@@ -3,7 +3,7 @@ set -e # Exit immediately if a command exits with a non-zero status.
 
 # --- Configuration ---
 # CHANGE THIS to your Docker Hub username
-DOCKER_USERNAME="your-dockerhub-username"
+DOCKER_USERNAME="jayvantsolomon"
 IMAGE_NAME="california-housing-api"
 CONTAINER_NAME="housing-predictor"
 

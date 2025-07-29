@@ -25,7 +25,9 @@ MODEL_NAME = "california-housing-regressor"
 MODEL_VERSION = 1 # We use the version we just registered
 model = None
 try:
-    model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
+    # model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
+    # model_uri = "mlruns/453282261435004634/e5cc911fc51d41b59a5882795832d89f/models/m-b96964a56177484bbdbf9eb2e2262584/artifacts"
+    model_uri= "mlruns/453282261435004634/models/m-b96964a56177484bbdbf9eb2e2262584/artifacts"
     model = mlflow.pyfunc.load_model(model_uri)
     log.info(f"Successfully loaded model '{MODEL_NAME}' version {MODEL_VERSION}")
 except Exception as e:
