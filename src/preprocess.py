@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from sklearn.datasets import fetch_california_housing
+# This script fetches the California Housing dataset and saves it to a CSV file.
 
 def get_data():
     """Fetches the California Housing dataset and saves it to a CSV file."""
