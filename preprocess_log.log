@@ -1,0 +1,10 @@
+2025-08-11 22:48:57,447 INFO preprocess.py main execution started
+2025-08-11 22:48:57,447 INFO Executing get_data
+2025-08-11 22:48:57,454 INFO Executing _quick_validate_and_report
+2025-08-11 22:50:56,279 INFO preprocess.py main execution started
+2025-08-11 22:50:56,280 INFO Executing get_data
+2025-08-11 22:50:56,284 INFO Executing _quick_validate_and_report
+2025-08-11 22:50:56,288 INFO Validation status: passed, errors: 0
+2025-08-11 22:50:56,288 INFO Data validation passed. Report: artifacts/validation/raw/20250811_172056_report.html
+2025-08-11 22:50:56,360 INFO Data saved to data/raw/housing.csv
+2025-08-11 22:50:56,360 INFO preprocess.py main execution finished

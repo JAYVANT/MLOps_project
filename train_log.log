@@ -1,0 +1,16 @@
+2025-08-11 22:52:08,169 INFO train.py main execution started
+2025-08-11 22:52:08,189 INFO Executing train_and_log_model for LinearRegression
+2025-08-11 22:52:08,277 INFO Started MLflow run: b11108182ddb47b39f030e5a9e8bd8cf
+2025-08-11 22:52:08,284 INFO Executing eval_metrics
+2025-08-11 22:52:08,290 INFO Metrics calculated: RMSE=0.7455813830127763, R2=0.5757877060324508
+2025-08-11 22:52:08,300 INFO Logged metrics for LinearRegression: RMSE=0.7455813830127763, R2=0.5757877060324508
+2025-08-11 22:52:10,069 INFO Logged model artifact for LinearRegression
+2025-08-11 22:52:10,070 INFO Executing train_and_log_model for DecisionTree
+2025-08-11 22:52:10,074 INFO Started MLflow run: f9e2fd0b624e4ecb8282512c40ccf1a7
+2025-08-11 22:52:10,179 INFO Executing eval_metrics
+2025-08-11 22:52:10,180 INFO Metrics calculated: RMSE=0.7068996727915191, R2=0.6186632145457622
+2025-08-11 22:52:10,190 INFO Logged metrics for DecisionTree: RMSE=0.7068996727915191, R2=0.6186632145457622
+2025-08-11 22:52:11,447 INFO Logged model artifact for DecisionTree
+2025-08-11 22:52:11,449 INFO Best model selected: DecisionTree (run_id=f9e2fd0b624e4ecb8282512c40ccf1a7)
+2025-08-11 22:52:11,477 INFO Model 'california-housing-regressor' registered as Version 2
+2025-08-11 22:52:11,477 INFO train.py main execution finished

@@ -1,4 +1,5 @@
 import os
+import logging
 import pandas as pd
 from sklearn.datasets import fetch_california_housing
 # This script fetches the California Housing dataset and saves it to a CSV file.
@@ -29,12 +30,20 @@ from sklearn.datasets import fetch_california_housing
 
 # This function performs quick validation on the DataFrame and generates a report.
 # It checks for basic schema compliance and sensible value ranges, then writes a summary report.
+# Setup logger
+
+log = logging.getLogger("preprocess")
+log.setLevel(logging.INFO)
+handler = logging.FileHandler("preprocess_log.log")
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+handler.setFormatter(formatter)
+log.addHandler(handler)
 
 def _quick_validate_and_report(df, out_dir="artifacts/validation/raw"):
+    log.info("Executing _quick_validate_and_report")
     import os, json, datetime, shutil
     os.makedirs(out_dir, exist_ok=True)
     ts = datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
- 
     # Basic checks for CA Housing schema & sensible ranges
     checks = {
         "MedInc":      (df["MedInc"] >= 0),
@@ -90,12 +99,13 @@ def _quick_validate_and_report(df, out_dir="artifacts/validation/raw"):
         shutil.copyfile(html_path, os.path.join(out_dir, "latest_report.html"))
     except Exception:
         pass
- 
+    log.info(f"Validation status: {status}, errors: {len(errors)}")
     return {"status": status, "summary_path": sum_path, "html_path": html_path}
  
 # This script fetches the California Housing dataset and saves it to a CSV file.
 def get_data():
     """Fetches the California Housing dataset and saves it to a CSV file."""
+    log.info("Executing get_data")
     print("Fetching dataset...")
     # Fetch the dataset
     housing = fetch_california_housing(as_frame=True)
@@ -108,7 +118,7 @@ def get_data():
     # Minimal validation (writes artifacts/validation/raw/*)
     val = _quick_validate_and_report(df)
     print(f"Data validation {val['status']}. Report: {val['html_path']}")
- 
+    log.info(f"Data validation {val['status']}. Report: {val['html_path']}")
     # Define the path to save the raw data
     output_dir = "data/raw"
     os.makedirs(output_dir, exist_ok=True)
@@ -118,6 +128,9 @@ def get_data():
     df.to_csv(output_path, index=False)
  
     print(f"Data saved to {output_path}")
+    log.info(f"Data saved to {output_path}")
  
 if __name__ == "__main__":
+    log.info("preprocess.py main execution started")
     get_data()
+    log.info("preprocess.py main execution finished")

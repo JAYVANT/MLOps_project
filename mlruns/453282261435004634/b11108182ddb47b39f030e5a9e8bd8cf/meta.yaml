@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/jayvantsolomon/Downloads/Bits/Git_repo/MLOps_project/mlruns/453282261435004634/b11108182ddb47b39f030e5a9e8bd8cf/artifacts
+end_time: 1754932930069
+entry_point_name: ''
+experiment_id: '453282261435004634'
+lifecycle_stage: active
+run_id: b11108182ddb47b39f030e5a9e8bd8cf
+run_name: LinearRegression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754932928273
+status: 3
+tags: []
+user_id: jayvantsolomon

@@ -1,0 +1,10 @@
+artifact_location: file:///Users/jayvantsolomon/Downloads/Bits/Git_repo/MLOps_project/mlruns/453282261435004634/models/m-fc1986916384406a9d1e8ceb9ffe6f14/artifacts
+creation_timestamp: 1754932928303
+experiment_id: '453282261435004634'
+last_updated_timestamp: 1754932930067
+model_id: m-fc1986916384406a9d1e8ceb9ffe6f14
+model_type: null
+name: model
+source_run_id: b11108182ddb47b39f030e5a9e8bd8cf
+status: 2
+status_message: null

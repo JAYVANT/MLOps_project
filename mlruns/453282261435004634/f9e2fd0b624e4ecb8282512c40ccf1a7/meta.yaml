@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/jayvantsolomon/Downloads/Bits/Git_repo/MLOps_project/mlruns/453282261435004634/f9e2fd0b624e4ecb8282512c40ccf1a7/artifacts
+end_time: 1754932931447
+entry_point_name: ''
+experiment_id: '453282261435004634'
+lifecycle_stage: active
+run_id: f9e2fd0b624e4ecb8282512c40ccf1a7
+run_name: DecisionTree
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754932930070
+status: 3
+tags: []
+user_id: jayvantsolomon

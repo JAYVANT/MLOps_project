@@ -40,6 +40,7 @@ model = None
 try:
     # model_uri = f"models:/{MODEL_NAME}/{MODEL_VERSION}"
     # model_uri = "mlruns/453282261435004634/e5cc911fc51d41b59a5882795832d89f/models/m-b96964a56177484bbdbf9eb2e2262584/artifacts"
+    log.info("Executing model loading")
     model_uri= "mlruns/453282261435004634/models/m-b96964a56177484bbdbf9eb2e2262584/artifacts"
     model = mlflow.pyfunc.load_model(model_uri)
     log.info(f"Successfully loaded model '{MODEL_NAME}' version {MODEL_VERSION}")
@@ -60,6 +61,7 @@ class HouseFeatures(BaseModel):
 # --- 5. Define Prediction Endpoint ---
 @app.post("/predict/")
 def predict_price(features: HouseFeatures):
+    log.info("Executing predict_price endpoint")
     if model is None:
         raise HTTPException(status_code=503, detail="Model not available")
 
