@@ -7,7 +7,20 @@ from pydantic import BaseModel
 import logging
 from pythonjsonlogger import jsonlogger
 from prometheus_fastapi_instrumentator import Instrumentator
-
+import time
+from prometheus_client import Counter, Histogram
+ 
+INFERENCE_SECONDS = Histogram(
+    "inference_seconds", "Model inference duration (s)",
+    buckets=(0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5)
+)
+PREDICTIONS_TOTAL = Counter(
+    "predictions_total", "Prediction requests", ["status", "model_version"]
+)
+PREDICTION_VALUE = Histogram(
+    "prediction_value", "Predicted median house value ($100k units)",
+    buckets=(0.1,0.25,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5.0,6.0)
+)
 # --- 1. Setup Logging & Monitoring ---
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -59,3 +72,30 @@ def predict_price(features: HouseFeatures):
     except Exception as e:
         log.error(f"Prediction error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Prediction failed")
+# def predict_price(features: HouseFeatures):
+#     if model is None:
+#         # model not loaded
+#         PREDICTIONS_TOTAL.labels(status="unavailable", model_version=str(MODEL_VERSION)).inc()
+#         raise HTTPException(status_code=503, detail="Model not available")
+ 
+#     try:
+#         log.info("Received prediction request", extra={'input': features.dict()})
+#         input_df = pd.DataFrame([features.dict()])
+ 
+#         # measure inference time
+#         t0 = time.perf_counter()
+#         prediction = float(model.predict(input_df)[0])
+#         duration = time.perf_counter() - t0
+#         INFERENCE_SECONDS.observe(duration)
+ 
+#         # record success + value distribution
+#         PREDICTIONS_TOTAL.labels(status="ok", model_version=str(MODEL_VERSION)).inc()
+#         PREDICTION_VALUE.observe(prediction)
+ 
+#         log.info("Prediction successful", extra={'prediction': prediction, 'latency_s': duration})
+#         return {"predicted_median_house_value": prediction}
+#     except Exception as e:
+#         # record failure
+#         PREDICTIONS_TOTAL.labels(status="error", model_version=str(MODEL_VERSION)).inc()
+#         log.error(f"Prediction error: {e}", exc_info=True)
+#         raise HTTPException(status_code=500, detail="Prediction failed")
